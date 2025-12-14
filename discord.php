@@ -20,6 +20,41 @@ $ca->initPage();
 $currentUser = new CurrentUser();
 $client = $currentUser->client();
 
+/* Translation function */
+function translate($key, $language) {
+    $translations = [
+        'en' => [
+            'page_title' => 'Discord Connection',
+            'linked_success' => 'Discord Linked Successfully',
+            'link_expired' => 'This Link has Expired',
+            'no_products' => 'No Active Products Found',
+            'must_login' => 'You must be logged in',
+        ],
+        'french' => [
+            'page_title' => 'Connexion Discord',
+            'linked_success' => 'Discord lié avec succès',
+            'link_expired' => 'Ce lien a expiré',
+            'no_products' => 'Aucun produit actif trouvé',
+            'must_login' => 'Vous devez être connecté',
+        ]
+    ];
+    
+    return $translations[$language][$key] ?? $translations['en'][$key];
+}
+
+/* Determinate client language */
+$clientLanguage = 'en';
+if ($client) {
+    $command = 'GetClientsDetails';
+    $postData = array(
+        'clientid' => $client->id,
+    );
+    $clientDetails = localAPI($command, $postData);
+    $clientLanguage = (isset($clientDetails['language']) && $clientDetails['language'] == 'french') ? 'french' : 'en';
+}
+
+$ca->setPageTitle(translate('page_title', $clientLanguage));
+
 if ($client) {    
     if(isset($_GET['code'])) {  
         /* Get user access token */
@@ -83,26 +118,26 @@ if ($client) {
                 curl_setopt($curl, CURLOPT_URL, $url);
                 curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
                 curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'PUT');
-                curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode(new stdClass())); // Corps vide en JSON
+                curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode(new stdClass()));
                 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
                 
                 $response_role = curl_exec($curl);
                 curl_close($curl);
                 
-                $ca->assign('message', "Discord Linked Successfully");
+                $ca->assign('message', translate('linked_success', $clientLanguage));
             } else {
-                $ca->assign('message', "No Active Products Found");
+                $ca->assign('message', translate('no_products', $clientLanguage));
             }
         } else {    
-            $ca->assign('message', "This Link has Expired");
+            $ca->assign('message', translate('link_expired', $clientLanguage));
         }
     } else {
         header('Location: https://discordapp.com/oauth2/authorize?response_type=code&client_id=' . $client_id . '&redirect_uri=' . urlencode($domainurl . '/discord.php') . '&scope=' . urlencode($scopes));
         exit;
     }
 } else {
-    $ca->assign('message', "You must be logged in");
+    $ca->assign('message', translate('must_login', $clientLanguage));
 }
 
 $ca->setTemplate('discord');
