@@ -3,8 +3,8 @@ $client_id = "";
 $secret_id = "";
 $scopes = "identify email";
 $domainurl = "https://billing.example.com";
-$guild_id = "000000000000000000"; // Chaîne de caractères
-$role_id = "000000000000000000"; // Chaîne de caractères
+$guild_id = "000000000000000000";
+$role_id = "000000000000000000";
 $bot_token = "";
 
 use WHMCS\Authentication\CurrentUser;
