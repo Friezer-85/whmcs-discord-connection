@@ -25,14 +25,14 @@ function translate($key, $language) {
     $translations = [
         'en' => [
             'page_title' => 'Discord Connection',
-            'linked_success' => 'Discord Linked Successfully',
+            'linked_success' => 'Discord Account Linked Successfully',
             'link_expired' => 'This Link has Expired',
             'no_products' => 'No Active Products Found',
             'must_login' => 'You must be logged in',
         ],
         'french' => [
             'page_title' => 'Connexion Discord',
-            'linked_success' => 'Discord lié avec succès',
+            'linked_success' => 'Compte Discord lié avec succès',
             'link_expired' => 'Ce lien a expiré',
             'no_products' => 'Aucun produit actif trouvé',
             'must_login' => 'Vous devez être connecté',
